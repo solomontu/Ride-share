@@ -6,13 +6,13 @@ import 'package:ride_share/shared/global_variables.dart';
 import 'package:ride_share/shared/utils/assets.dart';
 import 'package:ride_share/shared/utils/styles.dart';
 import 'package:ride_share/shared/widgets/custom_divider.dart';
-import 'package:ride_share/shared/widgets/spacers/horizontal_spacer.dart';
 
 class RideTile extends StatelessWidget {
-  const RideTile({super.key, this.onTap, this.seatsLeft});
+  const RideTile({super.key, this.onTap, this.seatsLeft, this.profileImage});
 
   final Function()? onTap;
   final Widget? seatsLeft;
+  final String? profileImage;
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +22,21 @@ class RideTile extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           SizedBox(
-            height: seatsLeft == null ? 268 : 298,
+            // height: seatsLeft == null ? 268 : 269,
             width: 335.w,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const TileTitle(),
+                 TileTitle(profileImage:profileImage),
                 const MapContainer(),
                 const Destination(),
                 seatsLeft != null
                     ? Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: seatsLeft,
-                        ))
+                    alignment: Alignment.centerLeft,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: seatsLeft,
+                    ))
                     : const SizedBox(),
               ],
             ),
@@ -54,12 +54,11 @@ class RideTile extends StatelessWidget {
 }
 
 class TileTitle extends StatelessWidget {
-  const TileTitle(
-      {super.key,
-      this.titleSubWidget,
-      this.titleText,
-      this.isDrivers,
-      this.profileImage});
+  const TileTitle({super.key,
+    this.titleSubWidget,
+    this.titleText,
+    this.isDrivers,
+    this.profileImage});
 
   final Widget? titleSubWidget;
   final String? titleText;
@@ -69,9 +68,10 @@ class TileTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 44.h,
+      width: 335.w,
+      // height: 49.h,
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-        ProfilePicture(imageUrl: profileImage ?? ''),
+        ProfilePicture(imageUrl: profileImage),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 10.0.w),
           child: Column(
@@ -81,9 +81,6 @@ class TileTitle extends StatelessWidget {
                 children: [
                   Styles.bold(titleText ?? '11/Sep/2023',
                       color: srThemes.primaryColor),
-                  HSpace(133.w),
-                  Styles.regular('8:12PM',
-                      fontSize: 12.sp, color: srThemes.gray2),
                 ],
               ),
               titleSubWidget ??
@@ -98,7 +95,13 @@ class TileTitle extends StatelessWidget {
                   )
             ],
           ),
-        )
+        ),
+        const Spacer(),
+        Align(
+          alignment: Alignment.topRight,
+          child:
+          Styles.regular('8:12PM', fontSize: 12.sp, color: srThemes.gray2),
+        ),
       ]),
     );
   }
@@ -114,12 +117,16 @@ class ProfilePicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 40.w,
-      width: 40.w,
-      decoration: BoxDecoration(
-          border: Border.all(color: srThemes.black), shape: BoxShape.circle),
-      child: CachedNetworkImageHolder(imageUrl: imageUrl),
+    return imageUrl == null
+        ? Container(
+        height: 40.w,
+        width: 40.w,
+        decoration: BoxDecoration(
+            border: Border.all(color: srThemes.black),
+            shape: BoxShape.circle),
+        child: const ProfileImagePlaceHolder())
+        : CachedNetworkImageHolder(
+      imageUrl: imageUrl,
     );
   }
 }
@@ -129,22 +136,18 @@ class ProfileImagePlaceHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 30,
-      width: 30,
-      child: Stack(children: [
-        Positioned(
-            bottom: 10,
-            left: 0,
-            right: 0,
-            child: SvgPicture.asset(Assets.personBody)),
-        Positioned(
-            top: 12,
-            left: 0,
-            right: 0,
-            child: SvgPicture.asset(Assets.personHead))
-      ]),
-    );
+    return Stack(children: [
+      Positioned(
+          bottom: 10.h,
+          left: 0,
+          right: 0,
+          child: SvgPicture.asset(Assets.personBody)),
+      Positioned(
+          top: 8.h,
+          left: 0,
+          right: 0,
+          child: SvgPicture.asset(Assets.personHead))
+    ]);
   }
 }
 
@@ -155,11 +158,13 @@ class CachedNetworkImageHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      fit: BoxFit.fill,
-      imageUrl: imageUrl ?? '',
-      placeholder: (context, url) => const ProfileImagePlaceHolder(),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+    return Container(
+      height: 40.h,
+      width: 40.h,
+      decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          image: DecorationImage(
+            image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.fill,)),
     );
   }
 }
@@ -192,12 +197,14 @@ class MapContainer extends StatelessWidget {
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(5.r),
             image: DecorationImage(
-                image: Image.asset(
-              Assets.googleMap,
-              height: 120.h,
-              width: double.infinity.w,
-              fit: BoxFit.fitWidth,
-            ).image)),
+                image: Image
+                    .asset(
+                  Assets.googleMap,
+                  height: 120.h,
+                  width: double.infinity.w,
+                  fit: BoxFit.fitWidth,
+                )
+                    .image)),
       ),
     );
   }
