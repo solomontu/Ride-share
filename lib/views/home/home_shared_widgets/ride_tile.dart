@@ -27,16 +27,16 @@ class RideTile extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                 TileTitle(profileImage:profileImage),
+                TileTitle(profileImage: profileImage),
                 const MapContainer(),
                 const Destination(),
                 seatsLeft != null
                     ? Align(
-                    alignment: Alignment.centerLeft,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 8.0),
-                      child: seatsLeft,
-                    ))
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 8.0),
+                          child: seatsLeft,
+                        ))
                     : const SizedBox(),
               ],
             ),
@@ -54,11 +54,12 @@ class RideTile extends StatelessWidget {
 }
 
 class TileTitle extends StatelessWidget {
-  const TileTitle({super.key,
-    this.titleSubWidget,
-    this.titleText,
-    this.isDrivers,
-    this.profileImage});
+  const TileTitle(
+      {super.key,
+      this.titleSubWidget,
+      this.titleText,
+      this.isDrivers,
+      this.profileImage});
 
   final Widget? titleSubWidget;
   final String? titleText;
@@ -100,7 +101,7 @@ class TileTitle extends StatelessWidget {
         Align(
           alignment: Alignment.topRight,
           child:
-          Styles.regular('8:12PM', fontSize: 12.sp, color: srThemes.gray2),
+              Styles.regular('8:12PM', fontSize: 12.sp, color: srThemes.gray2),
         ),
       ]),
     );
@@ -119,15 +120,15 @@ class ProfilePicture extends StatelessWidget {
   Widget build(BuildContext context) {
     return imageUrl == null
         ? Container(
-        height: 40.w,
-        width: 40.w,
-        decoration: BoxDecoration(
-            border: Border.all(color: srThemes.black),
-            shape: BoxShape.circle),
-        child: const ProfileImagePlaceHolder())
+            height: 40.w,
+            width: 40.w,
+            decoration: BoxDecoration(
+                border: Border.all(color: srThemes.black),
+                shape: BoxShape.circle),
+            child: const ProfileImagePlaceHolder())
         : CachedNetworkImageHolder(
-      imageUrl: imageUrl,
-    );
+            imageUrl: imageUrl,
+          );
   }
 }
 
@@ -143,7 +144,7 @@ class ProfileImagePlaceHolder extends StatelessWidget {
           right: 0,
           child: SvgPicture.asset(Assets.personBody)),
       Positioned(
-          top: 8.h,
+          top: 12.h,
           left: 0,
           right: 0,
           child: SvgPicture.asset(Assets.personHead))
@@ -164,7 +165,9 @@ class CachedNetworkImageHolder extends StatelessWidget {
       decoration: BoxDecoration(
           shape: BoxShape.circle,
           image: DecorationImage(
-            image: CachedNetworkImageProvider(imageUrl!), fit: BoxFit.fill,)),
+            image: CachedNetworkImageProvider(imageUrl!),
+            fit: BoxFit.fill,
+          )),
     );
   }
 }
@@ -190,21 +193,19 @@ class MapContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 16.0.h),
+      padding: EdgeInsets.only(top: 16.0.h, bottom: 10.h),
       child: Container(
         height: 120.h,
         width: 335.w,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5.r),
-            image: DecorationImage(
-                image: Image
-                    .asset(
-                  Assets.googleMap,
-                  height: 120.h,
-                  width: double.infinity.w,
-                  fit: BoxFit.fitWidth,
-                )
-                    .image)),
+          borderRadius: BorderRadius.circular(5.r),
+        ),
+        child: Image.asset(
+          Assets.googleMap,
+          height: 120.h,
+          width: double.infinity.w,
+          fit: BoxFit.fitWidth,
+        ),
       ),
     );
   }
@@ -232,7 +233,7 @@ class Destination extends StatelessWidget {
           ],
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 3.0.h, horizontal: 5.w),
+          padding: EdgeInsets.symmetric(horizontal: 5.w),
           child: CustomVerticalDivider(
             height: 19.h,
             color: srThemes.primaryColor,
